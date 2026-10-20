@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=System Information
+GenericName=System Specification
+Comment=Inspect CPU, RAM, kernel, and storage budget
+Exec=lxterminal -e "tos-info; echo; tos-size; echo; read -p 'Press Enter to close...'"
+Icon=dialog-information
+Terminal=false
+Categories=System;Monitor;Utility;
+Keywords=hardware;cpu;ram;kernel;specs;info;audit;
+StartupNotify=true

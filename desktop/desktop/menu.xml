@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ======================================================================= -->
+<!-- TOS 0.1 Alpha — Openbox Desktop Root Menu (menu.xml)                   -->
+<!-- ======================================================================= -->
+<openbox_menu xmlns="http://openbox.org/3.4/menu">
+
+  <menu id="root-menu" label="TOS Linux">
+    <item label="TOS Terminal">
+      <action name="Execute">
+        <command>lxterminal</command>
+      </action>
+    </item>
+    <item label="File Manager">
+      <action name="Execute">
+        <command>pcmanfm</command>
+      </action>
+    </item>
+    <item label="TOS Settings">
+      <action name="Execute">
+        <command>tos-settings</command>
+      </action>
+    </item>
+
+    <separator />
+
+    <menu id="system-menu" label="System Tools">
+      <item label="Hardware &amp; System Info">
+        <action name="Execute">
+          <command>lxterminal -e tos-info</command>
+        </action>
+      </item>
+      <item label="Storage Size Audit (10 GB)">
+        <action name="Execute">
+          <command>lxterminal -e 'tos-size; read -p "Press Enter to exit..."'</command>
+        </action>
+      </item>
+      <item label="Performance Monitor">
+        <action name="Execute">
+          <command>lxterminal -e 'tos-performance; read -p "Press Enter to exit..."'</command>
+        </action>
+      </item>
+      <item label="Wi-Fi Network Manager">
+        <action name="Execute">
+          <command>lxterminal -e 'tos-wifi status; read -p "Press Enter to exit..."'</command>
+        </action>
+      </item>
+    </menu>
+
+    <separator />
+
+    <item label="Application Launcher (Super)">
+      <action name="Execute">
+        <command>tos-launcher</command>
+      </action>
+    </item>
+    <item label="Install TOS to Disk">
+      <action name="Execute">
+        <command>lxterminal -e sudo /usr/local/bin/tos-installer</command>
+      </action>
+    </item>
+
+    <separator />
+
+    <item label="Power &amp; Exit (Super+X)">
+      <action name="Execute">
+        <command>tos-power</command>
+      </action>
+    </item>
+  </menu>
+
+</openbox_menu>

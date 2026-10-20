@@ -1,0 +1,97 @@
+/* ==============================================================================
+ * TOS 0.1 Alpha — Modern Application Launcher Theme (Rofi RASI)
+ * Colors: #05070A (Bg), #0D1520 (Input), #1683FF (Accent), #EAF4FF (Text)
+ * ============================================================================== */
+
+configuration {
+    modi: "drun,run,window";
+    font: "Inter 10";
+    show-icons: true;
+    display-drun: "Apps";
+    display-run: "Run";
+    display-window: "Windows";
+    drun-display-format: "{name}";
+}
+
+@theme "/dev/null"
+
+* {
+    bg: #05070AE6;
+    bg-alt: #0D1520;
+    fg: #EAF4FF;
+    fg-alt: #8EA5C2;
+    accent: #1683FF;
+    border-col: #1B293C;
+
+    background-color: transparent;
+    text-color: @fg;
+    margin: 0;
+    padding: 0;
+    spacing: 0;
+}
+
+window {
+    location: south west;
+    anchor: south west;
+    x-offset: 10px;
+    y-offset: -46px;
+    width: 380px;
+    border: 1px solid;
+    border-color: @border-col;
+    border-radius: 12px;
+    background-color: @bg;
+}
+
+mainbox {
+    padding: 12px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border: 1px solid;
+    border-color: @border-col;
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 0 0 12px 0;
+    children: [ prompt, entry ];
+}
+
+prompt {
+    text-color: @accent;
+    font: "Inter Bold 10";
+    margin: 0 8px 0 0;
+}
+
+entry {
+    placeholder: "Search applications...";
+    placeholder-color: @fg-alt;
+    text-color: @fg;
+}
+
+listview {
+    lines: 7;
+    columns: 1;
+    scrollbar: false;
+}
+
+element {
+    padding: 8px 10px;
+    border-radius: 6px;
+    margin: 2px 0;
+    children: [ element-icon, element-text ];
+}
+
+element selected {
+    background-color: @accent;
+    text-color: #FFFFFF;
+}
+
+element-icon {
+    size: 22px;
+    margin: 0 10px 0 0;
+}
+
+element-text {
+    vertical-align: 0.5;
+    text-color: inherit;
+}

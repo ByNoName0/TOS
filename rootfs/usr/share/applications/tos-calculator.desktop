@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Calculator
+GenericName=Scientific & Algebraic Calculator
+Comment=Perform calculations
+Exec=galculator
+Icon=accessories-calculator
+Terminal=false
+Categories=Utility;Calculator;
+Keywords=calc;math;scientific;algebraic;
+StartupNotify=true

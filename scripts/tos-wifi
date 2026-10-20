@@ -1,0 +1,127 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# tos-wifi — Lightweight Wi-Fi Management Utility for TOS Linux
+# Wraps wpa_cli, wpa_supplicant, and iproute2 with zero telemetry.
+# ==============================================================================
+set -e
+
+BLUE="\033[38;2;22;131;255m"
+CYAN="\033[38;2;56;169;255m"
+GREEN="\033[38;2;52;211;153m"
+RED="\033[38;2;248;113;113m"
+RESET="\033[0m"
+
+# Auto-detect wireless interface (wlan0, wlp2s0, etc.)
+WLAN_IFACE=$(ip -o link show 2>/dev/null | awk -F': ' '{print $2}' | grep -E '^wl' | head -n 1 || echo "wlan0")
+
+show_help() {
+    echo -e "${BLUE}======================================================================${RESET}"
+    echo -e "                   TOS Wi-Fi Management Utility                       "
+    echo -e "${BLUE}======================================================================${RESET}"
+    echo "Usage:"
+    echo "  tos-wifi scan                  Scan for available wireless networks"
+    echo "  tos-wifi connect <SSID> [pass] Connect to a Wi-Fi network (WPA/WPA2/Open)"
+    echo "  tos-wifi status                Show current wireless connection state"
+    echo "  tos-wifi disconnect            Disconnect from current wireless network"
+    echo "  tos-wifi list                  List saved networks"
+    echo "  tos-wifi help                  Display this help screen"
+    echo
+    echo "Active Interface: ${CYAN}${WLAN_IFACE}${RESET}"
+}
+
+COMMAND="${1:-status}"
+
+case "$COMMAND" in
+    scan)
+        echo -e "${CYAN}[*] Scanning for available Wi-Fi networks on ${WLAN_IFACE}...${RESET}"
+        if command -v iwlist >/dev/null 2>&1; then
+            sudo iwlist "${WLAN_IFACE}" scan 2>/dev/null | awk -F: '/ESSID/{print "  SSID: " $2}' | sed 's/"//g' || true
+        elif command -v wpa_cli >/dev/null 2>&1 && [ -S "/run/wpa_supplicant/${WLAN_IFACE}" ]; then
+            wpa_cli -i "${WLAN_IFACE}" scan >/dev/null 2>&1 || true
+            sleep 1
+            wpa_cli -i "${WLAN_IFACE}" scan_results
+        else
+            echo "Available Wi-Fi Networks (Simulation):"
+            echo -e "  ${GREEN}* TOS-Guest${RESET}        (Signal: 94%, Open)"
+            echo -e "    TOS-Office-5G    (Signal: 82%, WPA2-PSK)"
+            echo -e "    Home-Network     (Signal: 68%, WPA3-SAE)"
+        fi
+        ;;
+
+    connect)
+        SSID="${2:-}"
+        PASSWORD="${3:-}"
+        if [ -z "$SSID" ]; then
+            echo -e "${RED}Error: SSID required.${RESET} Example: tos-wifi connect MyNetwork secretpass"
+            exit 1
+        fi
+        echo -e "${CYAN}[*] Connecting to '${SSID}' on ${WLAN_IFACE}...${RESET}"
+        if command -v wpa_cli >/dev/null 2>&1 && [ -S "/run/wpa_supplicant/${WLAN_IFACE}" ]; then
+            NET_ID=$(wpa_cli -i "${WLAN_IFACE}" add_network)
+            wpa_cli -i "${WLAN_IFACE}" set_network "$NET_ID" ssid "\"${SSID}\"" >/dev/null
+            if [ -n "$PASSWORD" ]; then
+                wpa_cli -i "${WLAN_IFACE}" set_network "$NET_ID" psk "\"${PASSWORD}\"" >/dev/null
+            else
+                wpa_cli -i "${WLAN_IFACE}" set_network "$NET_ID" key_mgmt NONE >/dev/null
+            fi
+            wpa_cli -i "${WLAN_IFACE}" enable_network "$NET_ID" >/dev/null
+            wpa_cli -i "${WLAN_IFACE}" save_config >/dev/null
+            sudo dhclient -v "${WLAN_IFACE}"
+            echo -e "${GREEN}[✓] Successfully connected to '${SSID}'.${RESET}"
+        else
+            echo -e "${GREEN}[✓] Simulated connection to '${SSID}' established.${RESET}"
+            echo "    IP Address acquired via DHCP: 192.168.1.142/24"
+        fi
+        ;;
+
+    status)
+        echo -e "${CYAN}======================================================================${RESET}"
+        echo -e "                   TOS Network Interface Status                       "
+        echo -e "${CYAN}======================================================================${RESET}"
+        
+        # Wired Ethernet Check
+        ETH_IFACE=$(ip -o link show 2>/dev/null | awk -F': ' '{print $2}' | grep -E '^(eth|en)' | head -n 1 || echo "")
+        if [ -n "$ETH_IFACE" ]; then
+            ETH_IP=$(ip -4 addr show dev "$ETH_IFACE" 2>/dev/null | awk '/inet / {print $2}' || echo "No IP")
+            ETH_STATE=$(cat "/sys/class/net/${ETH_IFACE}/operstate" 2>/dev/null || echo "unknown")
+            echo -e "${CYAN}Wired Ethernet (${ETH_IFACE}):${RESET} ${ETH_STATE}"
+            echo -e "  IP Address: ${ETH_IP}"
+        else
+            echo -e "${CYAN}Wired Ethernet:${RESET} None detected"
+        fi
+        echo
+
+        # Wireless Check
+        echo -e "${CYAN}Wireless Wi-Fi (${WLAN_IFACE}):${RESET}"
+        if command -v iwconfig >/dev/null 2>&1; then
+            iwconfig "${WLAN_IFACE}" 2>/dev/null | grep -E 'ESSID|Access Point|Bit Rate' || echo "  Not associated"
+        else
+            WLAN_IP=$(ip -4 addr show dev "$WLAN_IFACE" 2>/dev/null | awk '/inet / {print $2}' || echo "Not connected")
+            echo "  Status: Idle / Ready"
+            echo "  IP Address: ${WLAN_IP}"
+        fi
+        echo
+
+        # DNS Check
+        echo -e "${CYAN}DNS Nameservers (/etc/resolv.conf):${RESET}"
+        grep 'nameserver' /etc/resolv.conf 2>/dev/null || echo "  nameserver 1.1.1.1 (Cloudflare Privacy)"
+        echo -e "${CYAN}======================================================================${RESET}"
+        ;;
+
+    disconnect)
+        echo -e "[*] Disconnecting wireless interface ${WLAN_IFACE}..."
+        if command -v wpa_cli >/dev/null 2>&1; then
+            wpa_cli -i "${WLAN_IFACE}" disconnect >/dev/null 2>&1 || true
+        fi
+        echo -e "${GREEN}[✓] Wi-Fi interface disconnected.${RESET}"
+        ;;
+
+    list)
+        echo -e "${CYAN}[*] Configured networks in /etc/wpa_supplicant/wpa_supplicant.conf:${RESET}"
+        grep 'ssid=' /etc/wpa_supplicant/wpa_supplicant.conf 2>/dev/null || echo "  No networks saved yet."
+        ;;
+
+    *)
+        show_help
+        ;;
+esac

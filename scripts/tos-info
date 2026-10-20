@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# tos-info — Display TOS Operating System Information
+# ==============================================================================
+set -e
+
+# Visual colors matching TOS palette (#1683FF, #38A9FF, #EAF4FF)
+BLUE="\033[38;2;22;131;255m"
+CYAN="\033[38;2;56;169;255m"
+WHITE="\033[38;2;234;244;255m"
+RESET="\033[0m"
+
+# Gather system specs
+KERNEL="$(uname -sr)"
+ARCH="$(uname -m)"
+UPTIME="$(uptime -p 2>/dev/null || uptime | sed 's/.*up \([^,]*\), .*/\1/')"
+
+if [ -f /proc/cpuinfo ]; then
+    CPU="$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^[ \t]*//')"
+    CPU_CORES="$(grep -c 'processor' /proc/cpuinfo)"
+    CPU_STR="${CPU} (${CPU_CORES} cores)"
+else
+    CPU_STR="x86_64 Compatible Processor"
+fi
+
+if command -v free >/dev/null 2>&1; then
+    MEM_TOTAL="$(free -h | awk '/^Mem:/ {print $2}')"
+    MEM_USED="$(free -h | awk '/^Mem:/ {print $3}')"
+    MEM_STR="${MEM_USED} / ${MEM_TOTAL}"
+else
+    MEM_STR="Available"
+fi
+
+if command -v df >/dev/null 2>&1; then
+    STORAGE_TOTAL="$(df -h / | awk 'NR==2 {print $2}')"
+    STORAGE_USED="$(df -h / | awk 'NR==2 {print $3}')"
+    STORAGE_PCT="$(df -h / | awk 'NR==2 {print $5}')"
+    STORAGE_STR="${STORAGE_USED} used of ${STORAGE_TOTAL} (${STORAGE_PCT})"
+else
+    STORAGE_STR="< 2.5 GB / 10 GB Target"
+fi
+
+DESKTOP_ENV="${XDG_CURRENT_DESKTOP:-TOS Desktop (Openbox/Tint2 Shell)}"
+
+echo -e "${BLUE}  ████████╗ ██████╗ ███████╗${RESET}"
+echo -e "${CYAN}  ╚══██╔══╝██╔═══██╗██╔════╝${RESET}"
+echo -e "${CYAN}     ██║   ██║   ██║███████╗${RESET}"
+echo -e "${BLUE}     ██║   ██║   ██║╚════██║${RESET}"
+echo -e "${BLUE}     ██║   ╚██████╔╝███████║${RESET}"
+echo -e "${CYAN}     ╚═╝    ╚═════╝ ╚══════╝${RESET}"
+echo
+echo -e "${WHITE}TOS Linux${RESET}"
+echo
+echo -e "${CYAN}Version:${RESET}      0.1 Alpha"
+echo -e "${CYAN}Kernel:${RESET}       ${KERNEL}"
+echo -e "${CYAN}Architecture:${RESET} ${ARCH}"
+echo -e "${CYAN}CPU:${RESET}          ${CPU_STR}"
+echo -e "${CYAN}Memory:${RESET}       ${MEM_STR}"
+echo -e "${CYAN}Storage:${RESET}      ${STORAGE_STR}"
+echo -e "${CYAN}Desktop:${RESET}      ${DESKTOP_ENV}"
+echo -e "${CYAN}Uptime:${RESET}       ${UPTIME}"
+echo

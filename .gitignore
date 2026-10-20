@@ -1,0 +1,58 @@
+# ==============================================================================
+# TOS LINUX — Official Repository .gitignore
+# Prevents checking in multi-gigabyte build artifacts, chroot roots, and ISOs
+# ==============================================================================
+
+# Build directories & scratch workspaces
+work/
+chroot/
+live-build/
+*.squashfs
+
+# Build output images & release artifacts
+output/
+*.iso
+*.img
+*.qcow2
+*.vmdk
+
+# Package archives & apt caches
+*.deb
+*.rpm
+*.tar.xz
+*.tar.gz
+*.tar.bz2
+/var/cache/
+/var/lib/apt/lists/
+
+# Kernel compilation intermediate files
+*.o
+*.ko
+*.mod.c
+*.order
+*.symvers
+vmlinux
+
+# Temporary logs & PID locks
+*.log
+*.pid
+*.tmp
+*.lock
+
+# Environment secrets
+.env
+.env.local
+
+# Web workbench node build artifacts (if applicable)
+node_modules/
+dist/
+.vite/
+
+# Editor & OS metadata
+.DS_Store
+Thumbs.db
+*~
+*.swp
+*.swo
+.vscode/
+.idea/

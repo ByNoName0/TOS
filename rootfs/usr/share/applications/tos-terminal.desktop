@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=TOS Terminal
+GenericName=Terminal Emulator
+Comment=Use the command line
+Exec=lxterminal
+Icon=utilities-terminal
+Terminal=false
+Categories=System;TerminalEmulator;Utility;
+Keywords=shell;prompt;command;commandline;bash;
+StartupNotify=true

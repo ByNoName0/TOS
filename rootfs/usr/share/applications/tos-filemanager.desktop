@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Files
+GenericName=File Manager
+Comment=Browse the filesystem and external drives
+Exec=pcmanfm %U
+Icon=system-file-manager
+Terminal=false
+Categories=System;FileManager;Utility;
+Keywords=folder;manager;explore;disk;filesystem;
+StartupNotify=true

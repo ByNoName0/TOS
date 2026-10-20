@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <radialGradient id="ambient" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#0E233E" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#070C14" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#05070A" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="gridGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1683FF" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#38A9FF" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1683FF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#38A9FF" stop-opacity="0.2"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Black/Navy Canvas -->
+  <rect width="1920" height="1080" fill="#05070A"/>
+  <rect width="1920" height="1080" fill="url(#ambient)"/>
+
+  <!-- Minimal Grid Structure -->
+  <g stroke="url(#gridGrad)" stroke-width="1">
+    <line x1="0" y1="270" x2="1920" y2="270" />
+    <line x1="0" y1="540" x2="1920" y2="540" />
+    <line x1="0" y1="810" x2="1920" y2="810" />
+    <line x1="480" y1="0" x2="480" y2="1080" />
+    <line x1="960" y1="0" x2="960" y2="1080" />
+    <line x1="1440" y1="0" x2="1440" y2="1080" />
+  </g>
+
+  <!-- Center Emblem -->
+  <g transform="translate(960, 520)">
+    <!-- Electric Accent Line -->
+    <path d="M-240 120 L240 120" stroke="url(#glow)" stroke-width="2"/>
+    <circle cx="0" cy="120" r="4" fill="#38A9FF"/>
+    
+    <!-- Stylized Geometric TOS Monogram -->
+    <text x="0" y="30" font-family="Inter, -apple-system, sans-serif" font-weight="900" font-size="96" fill="#EAF4FF" text-anchor="middle" letter-spacing="12">TOS</text>
+    <text x="0" y="80" font-family="Fira Code, monospace" font-size="14" fill="#38A9FF" text-anchor="middle" letter-spacing="8">LIGHTWEIGHT LINUX OS</text>
+  </g>
+</svg>

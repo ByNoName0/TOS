@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# tos-launcher — Launches the TOS Application Launcher (bound to Super Key)
+# ==============================================================================
+set -e
+
+ROFI_CONFIG="/etc/tos/rofi/config.rasi"
+[ ! -f "$ROFI_CONFIG" ] && ROFI_CONFIG="$(dirname "$(dirname "$0")")/desktop/launcher/config.rasi"
+
+if command -v rofi >/dev/null 2>&1; then
+    # Toggle behavior: if rofi is already open, kill it
+    if pgrep -x rofi >/dev/null 2>&1; then
+        killall -q rofi
+    else
+        rofi -show drun -config "$ROFI_CONFIG"
+    fi
+else
+    # Fallback to minimal launcher
+    echo "[TOS] Launching application menu..."
+    dmenu_run -b -nb "#0D1520" -nf "#EAF4FF" -sb "#1683FF" -sf "#FFFFFF" 2>/dev/null || xterm &
+fi

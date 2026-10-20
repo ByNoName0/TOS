@@ -1,0 +1,51 @@
+# ==============================================================================
+# TOS Electric Dark — Openbox 3 Theme
+# Colors: #05070A (Bg), #0D1520 (Panel/Title), #1683FF (Accent), #EAF4FF (Text)
+# ==============================================================================
+
+# Geometry
+border.width: 1
+padding.width: 6
+padding.height: 4
+window.client.padding.width: 0
+window.client.padding.height: 0
+window.handle.width: 0
+
+# Border colors
+border.color: #1B293C
+window.active.border.color: #1683FF
+window.inactive.border.color: #1B293C
+
+# Titlebar
+window.active.title.bg: flat solid
+window.active.title.bg.color: #0D1520
+window.inactive.title.bg: flat solid
+window.inactive.title.bg.color: #0A0F16
+
+# Title Text
+window.active.label.text.color: #EAF4FF
+window.active.label.bg: parentrelative
+window.inactive.label.text.color: #6C7D93
+window.inactive.label.bg: parentrelative
+
+# Window Buttons (Close, Maximize, Iconify)
+window.active.button.unpressed.bg: parentrelative
+window.active.button.unpressed.image.color: #38A9FF
+window.active.button.hover.image.color: #1683FF
+window.active.button.pressed.image.color: #EAF4FF
+
+window.inactive.button.unpressed.bg: parentrelative
+window.inactive.button.unpressed.image.color: #4A5B70
+
+# Menus
+menu.border.width: 1
+menu.border.color: #1B293C
+menu.title.bg: flat solid
+menu.title.bg.color: #0D1520
+menu.title.text.color: #38A9FF
+menu.items.bg: flat solid
+menu.items.bg.color: #0A0F16
+menu.items.text.color: #EAF4FF
+menu.items.active.bg: flat solid
+menu.items.active.bg.color: #1683FF
+menu.items.active.text.color: #FFFFFF

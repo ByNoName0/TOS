@@ -1,0 +1,4 @@
+# /etc/fstab: TOS 0.1 Alpha Live System Static Filesystem Information
+# <file system> <mount point>   <type>  <options>       <dump>  <pass>
+overlay         /               overlay rw              0       0
+tmpfs           /tmp            tmpfs   nosuid,nodev    0       0

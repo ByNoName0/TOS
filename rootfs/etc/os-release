@@ -1,0 +1,10 @@
+NAME="TOS"
+VERSION="0.1 Alpha"
+ID=tos
+ID_LIKE=debian
+PRETTY_NAME="TOS 0.1 Alpha (Lightweight Linux)"
+VERSION_ID="0.1"
+HOME_URL="https://github.com/tos-os"
+BUG_REPORT_URL="https://github.com/tos-os/issues"
+SUPPORT_URL="https://github.com/tos-os/discussions"
+LOGO=tos-logo

@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# tos-power — Clean TOS Power Menu Modal (Shutdown, Restart, Sleep, Logout)
+# Bound to Super+X and the rightmost panel power button.
+# ==============================================================================
+set -e
+
+OPTIONS="⏻  Power Off\n🔄  Restart\n💤  Sleep\n🚪  Log Out\n❌  Cancel"
+
+confirm_action() {
+    local action="$1"
+    if command -v rofi >/dev/null 2>&1; then
+        local choice=$(echo -e "Yes\nNo" | rofi -dmenu -i -p "Confirm ${action}?" -theme-str 'window {width: 280px; height: 130px; border-radius: 10px; background-color: #05070AE6; border: 1px solid #1B293C;} entry {placeholder: "";}')
+        [ "$choice" = "Yes" ]
+    else
+        read -p "Confirm ${action}? [y/N] " -n 1 -r
+        echo
+        [[ $REPLY =~ ^[Yy]$ ]]
+    fi
+}
+
+if command -v rofi >/dev/null 2>&1; then
+    CHOICE=$(echo -e "$OPTIONS" | rofi -dmenu -i -p "TOS Power" -theme-str 'window {width: 300px; height: 230px; border-radius: 12px; background-color: #05070AE6; border: 1px solid #1B293C; padding: 12px;} element {padding: 8px 10px; border-radius: 6px;} element selected {background-color: #1683FF;}')
+else
+    echo "=========================================="
+    echo "             TOS Power Menu               "
+    echo "=========================================="
+    echo "1) Power Off"
+    echo "2) Restart"
+    echo "3) Sleep"
+    echo "4) Log Out"
+    echo "5) Cancel"
+    read -p "Select option [1-5]: " NUM
+    case "$NUM" in
+        1) CHOICE="Power Off";;
+        2) CHOICE="Restart";;
+        3) CHOICE="Sleep";;
+        4) CHOICE="Log Out";;
+        *) CHOICE="Cancel";;
+    esac
+fi
+
+case "$CHOICE" in
+    *"Power Off"*)
+        if confirm_action "Power Off"; then
+            echo "[*] Syncing buffers and shutting down..."
+            sync
+            systemctl poweroff 2>/dev/null || sudo poweroff 2>/dev/null || halt
+        fi
+        ;;
+    *"Restart"*)
+        if confirm_action "Restart"; then
+            echo "[*] Syncing buffers and rebooting..."
+            sync
+            systemctl reboot 2>/dev/null || sudo reboot 2>/dev/null
+        fi
+        ;;
+    *"Sleep"*)
+        echo "[*] Entering system sleep mode..."
+        systemctl suspend 2>/dev/null || sudo zzz 2>/dev/null
+        ;;
+    *"Log Out"*)
+        if confirm_action "Log Out"; then
+            echo "[*] Ending TOS desktop session..."
+            openbox --exit 2>/dev/null || pkill -u "$USER"
+        fi
+        ;;
+    *)
+        exit 0
+        ;;
+esac

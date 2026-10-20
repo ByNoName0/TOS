@@ -1,0 +1,100 @@
+# ==============================================================================
+# TOS 0.1 Alpha — Tint2 Panel Configuration
+# Layout: [Launcher Button] [Taskbar] [Systray: Net, Audio, Battery, Clock] [Power]
+# Colors: Panel #0D1520 | Border #1B293C | Accent #1683FF | Text #EAF4FF
+# ==============================================================================
+
+# Background 1: Panel Background
+rounded = 0
+border_width = 1
+border_sides = T
+border_color = #1B293C 100
+background_color = #0D1520 100
+
+# Background 2: Default Task
+rounded = 6
+border_width = 1
+border_color = #1B293C 100
+background_color = #0A0F16 100
+
+# Background 3: Active Task (Electric Blue Accent)
+rounded = 6
+border_width = 1
+border_color = #1683FF 100
+background_color = #1683FF 35
+
+# Background 4: Launcher / Power Buttons
+rounded = 6
+border_width = 1
+border_color = #1683FF 60
+background_color = #1683FF 20
+
+# Panel Autohide and Geometry
+panel_items = LTSBC
+panel_monitor = all
+panel_position = bottom center horizontal
+panel_size = 100% 36
+panel_margin = 0 0
+panel_padding = 6 3 6
+panel_background_id = 1
+wm_menu = 1
+panel_dock = 0
+panel_layer = top
+
+# Taskbar
+taskbar_mode = single_desktop
+taskbar_hide_if_empty = 0
+taskbar_padding = 4 2 4
+taskbar_background_id = 0
+taskbar_active_background_id = 0
+
+# Tasks
+task_icon = 1
+task_text = 1
+task_maximum_size = 160 30
+task_padding = 6 3
+task_font = Inter, Sans 9
+task_font_color = #A4B8D1 100
+task_active_font_color = #EAF4FF 100
+task_background_id = 2
+task_active_background_id = 3
+
+# Launcher Button (TOS Logo -> launches tos-launcher)
+button = new
+button_icon = /usr/share/icons/tos/tos-logo.svg
+button_text = TOS
+button_tooltip = Application Launcher (Super Key)
+button_lclick_command = tos-launcher
+button_font = Inter, Sans Bold 9
+button_font_color = #38A9FF 100
+button_padding = 8 3
+button_background_id = 4
+
+# System Tray (Network, Audio, Battery)
+systray_padding = 6 3 6
+systray_background_id = 0
+systray_sort = left2right
+systray_icon_size = 18
+systray_icon_as_original = 1
+
+# Clock
+time1_format = %I:%M %p
+time1_font = Inter, Sans Bold 9
+time1_color = #EAF4FF 100
+time2_format = %a, %b %d
+time2_font = Inter, Sans 8
+time2_color = #8EA5C2 100
+clock_tooltip = %A, %B %d, %Y
+clock_padding = 8 2
+clock_background_id = 2
+clock_lclick_command = gsimplecal 2>/dev/null || true
+
+# Power Button (Rightmost icon -> launches tos-power)
+button = new
+button_text = ⏻
+button_tooltip = Power Menu (Super+X)
+button_lclick_command = tos-power
+button_font = Inter, Sans Bold 11
+button_font_color = #FF5555 100
+button_padding = 8 3
+button_background_id = 2

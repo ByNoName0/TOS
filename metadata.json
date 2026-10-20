@@ -1,0 +1,6 @@
+{
+  "name": "TOS — Lightweight Linux OS",
+  "description": "A fast, modern, lightweight Linux operating system built for low-resource hardware, with a custom desktop, package utilities, and ISO build system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

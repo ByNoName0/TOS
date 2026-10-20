@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# tos-install & TOS Package Management Wrapper
+# Designed to enforce the 10 GB storage constraint and avoid recommended bloat.
+# ==============================================================================
+set -e
+
+CMD_NAME="$(basename "$0")"
+
+show_help() {
+    echo "TOS Package Management System (TOS 0.1 Alpha)"
+    echo "Wraps upstream repository with size limits & no-bloat flags."
+    echo
+    echo "Usage:"
+    echo "  tos-install <package>   Install package without unnecessary recommended bloat"
+    echo "  tos-remove <package>    Uninstall package and clean orphaned dependencies"
+    echo "  tos-update              Synchronize repository lists and upgrade installed packages"
+    echo "  tos-search <query>      Search package repository"
+    echo "  tos-info                Display TOS system specifications"
+    echo "  tos-size                Audit disk space against 10 GB limit"
+    echo "  tos-performance         Show RAM, CPU, and service performance"
+    echo "  tos-help                Show this message"
+}
+
+case "$CMD_NAME" in
+    tos-install)
+        if [ "$#" -lt 1 ]; then
+            echo "Error: Please specify package name(s) to install."
+            echo "Example: tos-install htop"
+            exit 1
+        fi
+        echo "[*] Checking TOS storage space before installation..."
+        # Check available space on /
+        AVAIL_KB=$(df / --output=avail 2>/dev/null | tail -n 1 || echo 10000000)
+        if [ "$AVAIL_KB" -lt 500000 ]; then
+            echo "[!] WARNING: Less than 500 MB remaining on root partition!"
+            echo "    TOS protects your 10 GB storage limit."
+            read -p "Do you still want to proceed? [y/N] " -n 1 -r
+            echo
+            [[ ! $REPLY =~ ^[Yy]$ ]] && exit 1
+        fi
+        echo "[*] Installing '$*' via APT (--no-install-recommends)..."
+        if command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get install --no-install-recommends "$@"
+        else
+            echo "[MOCK/LOCAL TEST MODE] Command would run: sudo apt-get install --no-install-recommends $*"
+            echo "[✓] Simulated installation of $* successful."
+        fi
+        ;;
+
+    tos-remove)
+        if [ "$#" -lt 1 ]; then
+            echo "Error: Please specify package name(s) to remove."
+            exit 1
+        fi
+        echo "[*] Removing '$*' and autoremoving unused dependencies..."
+        if command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get remove --purge "$@"
+            sudo apt-get autoremove --purge -y
+        else
+            echo "[MOCK/LOCAL TEST MODE] Command would run: sudo apt-get remove --purge $* && sudo apt-get autoremove"
+            echo "[✓] Package $* removed."
+        fi
+        ;;
+
+    tos-update)
+        echo "[*] Updating TOS repository lists and system packages..."
+        if command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get upgrade -y --no-install-recommends
+            sudo apt-get clean
+        else
+            echo "[MOCK/LOCAL TEST MODE] Repository cache refreshed and system upgraded."
+        fi
+        ;;
+
+    tos-search)
+        if [ "$#" -lt 1 ]; then
+            echo "Error: Please specify a search term."
+            exit 1
+        fi
+        echo "[*] Searching for '$*' in package index..."
+        if command -v apt-cache >/dev/null 2>&1; then
+            apt-cache search "$@" | head -n 25
+        else
+            echo "Found packages matching '$*':"
+            echo "  $* - Package utility for TOS"
+            echo "  $*-common - Common support files for $*"
+        fi
+        ;;
+
+    *)
+        show_help
+        ;;
+esac

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Task Manager
+GenericName=Process Viewer
+Comment=Monitor CPU cores, memory utilization, and active processes
+Exec=lxtask
+Icon=utilities-system-monitor
+Terminal=false
+Categories=System;Monitor;
+Keywords=process;monitor;cpu;ram;kill;task;
+StartupNotify=true

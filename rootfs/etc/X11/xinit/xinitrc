@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# TOS 0.1 Alpha — Master X11 Initialization Script (xinitrc)
+# Sets dark background (#05070A), loads resources, and starts the window manager.
+# ==============================================================================
+
+# Merge standard user Xresources if available
+[ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
+
+# Set deep black background before window manager loads
+xsetroot -solid "#05070A"
+
+# Disable screen blanking / power saving for smooth live testing
+xset s off
+xset -dpms
+
+# If TOS desktop startup script exists, execute it (Phase 8)
+if [ -x /usr/local/bin/tos-session ]; then
+    exec /usr/local/bin/tos-session
+elif command -v openbox-session >/dev/null 2>&1; then
+    exec openbox-session
+else
+    # Fallback to minimal X terminal if desktop shell is not yet installed
+    xterm -bg "#05070A" -fg "#EAF4FF" -geometry 80x24+50+50 &
+    exec twm 2>/dev/null || exec xterm
+fi

@@ -1,0 +1,37 @@
+# ==============================================================================
+# TOS 0.1 Alpha — Master Network Interface Configuration (Ethernet & Wi-Fi)
+# ==============================================================================
+
+# Loopback interface
+auto lo
+iface lo inet loopback
+
+# ------------------------------------------------------------------------------
+# Wired Ethernet Interfaces (DHCP)
+# ------------------------------------------------------------------------------
+allow-hotplug eth0
+iface eth0 inet dhcp
+
+allow-hotplug enp0s3
+iface enp0s3 inet dhcp
+
+allow-hotplug enp1s0
+iface enp1s0 inet dhcp
+
+allow-hotplug eno1
+iface eno1 inet dhcp
+
+# ------------------------------------------------------------------------------
+# Wireless Wi-Fi Interfaces (DHCP + WPA Supplicant)
+# ------------------------------------------------------------------------------
+allow-hotplug wlan0
+iface wlan0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+allow-hotplug wlp2s0
+iface wlp2s0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+
+allow-hotplug wlp3s0
+iface wlp3s0 inet dhcp
+    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf

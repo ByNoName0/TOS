@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Text Editor
+GenericName=Text Editor
+Comment=Edit text files and code
+Exec=mousepad %F
+Icon=text-editor
+Terminal=false
+Categories=Utility;TextEditor;
+Keywords=text;editor;notes;code;pad;
+StartupNotify=true

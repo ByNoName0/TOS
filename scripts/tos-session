@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# tos-session — Master TOS Desktop Session Orchestrator
+# Starts window manager, compositor, wallpaper, panel, and system tray services.
+# ==============================================================================
+set -e
+
+# Set deep black background immediately
+xsetroot -solid "#05070A"
+
+# 1. Render TOS geometric wallpaper
+WALLPAPER="/usr/share/backgrounds/tos-default.svg"
+[ ! -f "$WALLPAPER" ] && WALLPAPER="$(dirname "$(dirname "$0")")/wallpapers/tos-default.svg"
+if command -v feh >/dev/null 2>&1 && [ -f "$WALLPAPER" ]; then
+    feh --bg-fill "$WALLPAPER" &
+fi
+
+# 2. Start Picom Compositor (Subtle shadows, no lag)
+if command -v picom >/dev/null 2>&1; then
+    PICOM_CONF="/etc/tos/picom/picom.conf"
+    [ ! -f "$PICOM_CONF" ] && PICOM_CONF="$(dirname "$(dirname "$0")")/desktop/desktop/picom.conf"
+    picom --config "$PICOM_CONF" -b || true
+fi
+
+# 3. Start Tint2 Panel (Taskbar, tray, clock, power)
+if command -v tint2 >/dev/null 2>&1; then
+    TINT2_CONF="/etc/tos/tint2/tint2rc"
+    [ ! -f "$TINT2_CONF" ] && TINT2_CONF="$(dirname "$(dirname "$0")")/desktop/panel/tint2rc"
+    tint2 -c "$TINT2_CONF" &
+fi
+
+# 4. Start Dunst Notification Daemon (if installed)
+command -v dunst >/dev/null 2>&1 && dunst &
+
+# 5. Start Openbox Window Manager (Main process)
+exec openbox-session

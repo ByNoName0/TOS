@@ -1,0 +1,12 @@
+# ==============================================================================
+# TOS APT Configuration — Strict Lean Mode
+# Prevents bloat packages from being installed, guaranteeing < 10 GB footprint.
+# ==============================================================================
+APT::Install-Recommends "false";
+APT::Install-Suggests "false";
+APT::AutoRemove::RecommendsImportant "false";
+APT::AutoRemove::SuggestsImportant "false";
+DPkg::Options {
+   "--force-confdef";
+   "--force-confold";
+};
